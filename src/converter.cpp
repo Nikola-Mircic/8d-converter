@@ -8,9 +8,6 @@
                     return; \
                  }
 
-#define SAMPLE_PATH "./sample/sample.wav"
-#define SECONDS 10
-
 #define PI 3.14
 
 struct AudioData{
@@ -21,6 +18,9 @@ struct AudioData{
 SDL_AudioSpec spec;
 
 int phase = 0;
+
+char* filepath = "./sample/sample.wav";
+double duration = 10.0;
 
 static void callbackFunc(void* userData, Uint8* stream, int streamLength){
     AudioData* data = (AudioData*) userData;
@@ -37,9 +37,9 @@ static void callbackFunc(void* userData, Uint8* stream, int streamLength){
         short* s_left = samples+i-1;
         short* s_right = samples+i;
 
-        phase = (phase+2)%(spec.freq*SECONDS);
+        phase = (phase+2)%(int)(spec.freq*duration);
         
-        double angle = (phase*1.0/(spec.freq*SECONDS))*2*PI;
+        double angle = (phase*1.0/(spec.freq*duration))*2*PI;
 
         *s_left = (short) (*s_left * (1.0-cos(angle))/2.0);
         *s_right = (short) (*s_right * (1.0+cos(angle))/2.0);
@@ -51,10 +51,10 @@ static void callbackFunc(void* userData, Uint8* stream, int streamLength){
     data->length -= length;
 }
 
-void PlayFile(const char* filePath){
+void PlayFile(){
     SDL_Init(SDL_INIT_AUDIO);
 
-    RUN( SDL_LoadWAV(filePath, &spec, &data.pos, &data.length) )
+    RUN( SDL_LoadWAV(filepath, &spec, &data.pos, &data.length) )
 
     spec.callback = callbackFunc;
     spec.userdata = &data;
@@ -82,7 +82,20 @@ void PlayFile(const char* filePath){
 int main(int argc, char** argv){
     std::cout << "Convert a WAV file to 8D \n";
     
-    PlayFile(SAMPLE_PATH);
+    for(int i=0; i<argc; ++i)
+        std::cout << argv[i] << std::endl;
+
+    for(int i=1; i<argc; ++i){
+        if(strcmp(argv[i], "-f") == 0){
+            filepath = argv[++i];
+        }
+        if(strcmp(argv[i], "-d") == 0){
+            sscanf(argv[++i], "%lf", &duration);
+        }
+        std::cout << duration << std::endl;
+    }
+
+    PlayFile();
 
     return 0;
 }
