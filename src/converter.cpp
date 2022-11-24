@@ -132,8 +132,6 @@ void ConvertFile(){
 }
 
 int main(int argc, char** argv){
-    std::cout << "Convert a WAV file to 8D \n";
-
     for(int i=1; i<argc; ++i){
         if(strcmp(argv[i], "--play") == 0){
             play = true;
@@ -155,19 +153,24 @@ int main(int argc, char** argv){
     InitSource();
 
     if(play){
+        std::cout << ">>======================================= \n";
         std::cout << "Playing:"<<std::endl;
         std::cout << "\t - file: " << filepath << std::endl;
         std::cout << "\t - duration: " << duration << "s" << std::endl;
+        std::cout << ">>======================================= \n";
         PlayFile();
     }
     if(convert){
+        std::cout << ">>======================================= \n";
         std::cout << "Converting:"<<std::endl;
         std::cout << "\t - from: " << filepath << std::endl;
         std::cout << "\t - to: " << destination << std::endl;
         std::cout << "\t - duration: " << duration << "s" << std::endl;
+        std::cout << ">>======================================= \n";
         ConvertFile();
     }
-        
+    
+    
 
     return 0;
 }
