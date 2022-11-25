@@ -94,7 +94,7 @@ void ConvertFile(){
     if(!src.is_open())
         return;
     
-    std::ofstream out(destination, std::ios::out | std::ios::binary | std::ios::app);
+    std::ofstream out(destination, std::ios::out | std::ios::binary);
     if(!out.is_open())
         return;
 
